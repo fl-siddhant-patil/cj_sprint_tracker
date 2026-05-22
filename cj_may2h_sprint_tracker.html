@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CJ · MAY 2H 2026 Sprint Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #1B365D;
+    --navy-deep: #122440;
+    --cyan: #00B4D8;
+    --cyan-light: #E0F7FA;
+    --white: #ffffff;
+    --bg: #F4F6FA;
+    --surface: #ffffff;
+    --border: #E2E6EE;
+    --border-strong: #CBD2DF;
+    --text: #1A2233;
+    --text2: #4B5668;
+    --text3: #8A94A6;
+    --green: #16A34A; --green-bg: rgba(22,163,74,0.09);
+    --red: #DC2626; --red-bg: rgba(220,38,38,0.09);
+    --amber: #D97706; --amber-bg: rgba(217,119,6,0.09);
+    --blue: #2563EB; --blue-bg: rgba(37,99,235,0.09);
+    --purple: #7C3AED; --purple-bg: rgba(124,58,237,0.09);
+    --teal-bg: rgba(0,180,216,0.09);
+    --gray-bg: rgba(107,114,128,0.09);
+    --font: 'DM Sans', sans-serif;
+    --mono: 'DM Mono', monospace;
+  }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 24px 20px 48px;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: var(--navy);
+    border-radius: 16px;
+    padding: 20px 24px;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .header-title h1 {
+    color: #fff;
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+  .header-title p {
+    color: rgba(255,255,255,0.5);
+    font-size: 12px;
+    margin-top: 3px;
+  }
+  .header-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+  .pill {
+    background: rgba(0,180,216,0.15);
+    border: 1px solid rgba(0,180,216,0.3);
+    border-radius: 99px;
+    padding: 5px 14px;
+    text-align: center;
+  }
+  .pill-num { color: var(--cyan); font-size: 20px; font-weight: 600; font-family: var(--mono); display: block; line-height: 1; }
+  .pill-lbl { color: rgba(255,255,255,0.5); font-size: 10px; display: block; margin-top: 2px; }
+
+  /* ── METRICS ── */
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .mc {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 14px;
+  }
+  .mc-lbl { font-size: 11px; color: var(--text3); margin-bottom: 4px; }
+  .mc-val { font-size: 22px; font-weight: 600; color: var(--text); font-family: var(--mono); }
+  .mc-track { height: 3px; background: var(--border); border-radius: 99px; margin-top: 8px; }
+  .mc-fill { height: 3px; border-radius: 99px; }
+
+  /* ── FILTERS ── */
+  .toolbar {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 14px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .search-wrap { position: relative; flex: 1; min-width: 180px; }
+  .search-wrap svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text3); pointer-events: none; }
+  .search-wrap input {
+    width: 100%;
+    padding: 7px 10px 7px 32px;
+    font-size: 13px;
+    font-family: var(--font);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+    color: var(--text);
+    outline: none;
+  }
+  .search-wrap input:focus { border-color: var(--cyan); }
+  .filter-group { display: flex; gap: 6px; flex-wrap: wrap; }
+  .fbtn {
+    border: 1px solid var(--border);
+    border-radius: 99px;
+    padding: 5px 13px;
+    font-size: 11px;
+    font-family: var(--font);
+    font-weight: 500;
+    cursor: pointer;
+    background: var(--surface);
+    color: var(--text2);
+    transition: all 0.15s;
+  }
+  .fbtn:hover { background: var(--bg); border-color: var(--border-strong); }
+  .fbtn.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+
+  /* ── TABLE ── */
+  .table-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 12.5px; min-width: 640px; }
+  thead th {
+    background: var(--navy);
+    color: rgba(255,255,255,0.75);
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    padding: 9px 14px;
+    text-align: left;
+    white-space: nowrap;
+  }
+  thead th:nth-child(1) { width: 86px; }
+  thead th:nth-child(2) { }
+  thead th:nth-child(3) { width: 160px; }
+  thead th:nth-child(4) { width: 120px; }
+  thead th:nth-child(5) { width: 65px; }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:nth-child(even) { background: #FAFBFD; }
+  tbody tr:hover { background: var(--cyan-light); }
+  td { padding: 9px 14px; vertical-align: middle; max-width: 0; }
+  td:nth-child(2) { max-width: 340px; }
+
+  .key-link {
+    color: var(--cyan);
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+  }
+  .key-link:hover { text-decoration: underline; }
+  .key-link svg { opacity: 0.5; }
+
+  .summary-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text); font-size: 12.5px; display: block; }
+
+  .badge { display: inline-block; border-radius: 99px; padding: 3px 9px; font-size: 10px; font-weight: 500; white-space: nowrap; }
+
+  .assignee-chip { display: flex; align-items: center; gap: 6px; overflow: hidden; }
+  .avatar { width: 24px; height: 24px; border-radius: 50%; background: var(--navy); color: #fff; font-size: 8px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .assignee-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; color: var(--text); }
+
+  .footer-bar {
+    padding: 10px 14px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--text3);
+    background: #FAFBFD;
+  }
+  .no-results { text-align: center; padding: 32px; color: var(--text3); font-size: 13px; }
+
+  @media (max-width: 600px) {
+    body { padding: 12px 10px 32px; }
+    .header { padding: 14px 16px; }
+    .header-title h1 { font-size: 14px; }
+    .metrics { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-title">
+    <h1>Customer Journey — MAY 2H 2026</h1>
+    <p>Sprint tracker · <span id="last-updated"></span></p>
+  </div>
+  <div class="header-pills">
+    <div class="pill"><span class="pill-num" id="h-total">43</span><span class="pill-lbl">total stories</span></div>
+    <div class="pill"><span class="pill-num" id="h-dev">—</span><span class="pill-lbl">in dev</span></div>
+    <div class="pill"><span class="pill-num" id="h-high">—</span><span class="pill-lbl">high priority</span></div>
+  </div>
+</div>
+
+<div class="metrics" id="metrics"></div>
+
+<div class="toolbar">
+  <div class="search-wrap">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" id="search" placeholder="Search by ticket, summary or assignee…" oninput="render()" />
+  </div>
+  <div class="filter-group" id="filters">
+    <button class="fbtn active" onclick="setFilter('all',this)">All</button>
+    <button class="fbtn" onclick="setFilter('Mobile',this)">📱 Mobile</button>
+    <button class="fbtn" onclick="setFilter('CJP',this)">🌐 CJP / FE</button>
+    <button class="fbtn" onclick="setFilter('BE',this)">⚙️ Backend</button>
+    <button class="fbtn" onclick="setFilter('High',this)">🔴 High priority</button>
+  </div>
+</div>
+
+<div class="table-card">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>Summary</th>
+          <th>Status</th>
+          <th>Assignee</th>
+          <th>Priority</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+    <div class="no-results" id="no-results" style="display:none;">No stories match your search or filter.</div>
+  </div>
+  <div class="footer-bar">
+    <span id="count-label">Showing 43 of 43 stories</span>
+    <span>Sprint: 21 May – 2 Jun 2026</span>
+  </div>
+</div>
+
+<script>
+const STATUS_STYLE = {
+  'OPEN':                     { bg:'rgba(107,114,128,0.1)', color:'#374151' },
+  'REFINEMENT':               { bg:'rgba(124,58,237,0.1)',  color:'#5B21B6' },
+  'DISCOVERY IN PROGRESS':    { bg:'rgba(217,119,6,0.1)',   color:'#92400E' },
+  'READY FOR DEVELOPMENT':    { bg:'rgba(37,99,235,0.1)',   color:'#1E40AF' },
+  'DEV IN PROGRESS':          { bg:'rgba(0,180,216,0.12)',  color:'#0C6B8A' },
+  'READY FOR CODE REVIEW':    { bg:'rgba(5,150,105,0.1)',   color:'#065F46' },
+  'READY TO QA':              { bg:'rgba(22,163,74,0.1)',   color:'#15803D' },
+  'QA IN PROGRESS':           { bg:'rgba(22,163,74,0.15)', color:'#14532D' },
+  'QA PASSED':                { bg:'rgba(22,163,74,0.2)',   color:'#14532D' },
+  'UAT READY':                { bg:'rgba(27,54,93,0.1)',    color:'#1B365D' },
+  'DONE':                     { bg:'rgba(22,163,74,0.25)',  color:'#14532D' },
+};
+
+const METRICS = [
+  { label:'Ready for Dev',   key:'READY FOR DEVELOPMENT',  color:'#2563EB' },
+  { label:'Dev in Progress', key:'DEV IN PROGRESS',         color:'#00B4D8' },
+  { label:'Code Review',     key:'READY FOR CODE REVIEW',   color:'#059669' },
+  { label:'Ready to QA',     key:'READY TO QA',             color:'#16A34A' },
+  { label:'QA in Progress',  key:'QA IN PROGRESS',          color:'#15803D' },
+  { label:'Refinement',      key:'REFINEMENT',              color:'#7C3AED' },
+];
+
+const AVATAR_COLORS = [
+  '#1B365D','#0C567A','#7C3AED','#059669','#D97706','#DC2626','#2563EB','#0F766E'
+];
+
+const data = [
+  { key:'CJ-222', summary:'Integration Event for Engagement Program for Mobile App users',          status:'REFINEMENT',             assignee:'Gayatri Vyavahare',    priority:'Medium', label:''       },
+  { key:'CJ-221', summary:'Create Wrapper API for Callback Details API',                            status:'READY FOR DEVELOPMENT',  assignee:'Prasad Alai',          priority:'Medium', label:'BE'     },
+  { key:'CJ-218', summary:'Integrate Wrapper API for Callback Scheduling & Callback Details API',   status:'READY FOR DEVELOPMENT',  assignee:'Prasad Alai',          priority:'Medium', label:'CJP'    },
+  { key:'CJ-217', summary:'Back Navigation Routing (Rejection & Onboarding Screens)',               status:'READY FOR DEVELOPMENT',  assignee:'Pramod Ponnoju',       priority:'Medium', label:'CJP'    },
+  { key:'CJ-216', summary:'Back to Original Offer in Bureau Surrogate Journey',                     status:'READY FOR DEVELOPMENT',  assignee:'Pramod Ponnoju',       priority:'Medium', label:'CJP'    },
+  { key:'CJ-215', summary:'Unused Icon Disable in Products & Services',                             status:'READY FOR DEVELOPMENT',  assignee:'Pramod Ponnoju',       priority:'Medium', label:'CJP'    },
+  { key:'CJ-214', summary:'[Mobile] Deferred Deep Linking — Android (AppTrove)',                   status:'OPEN',                   assignee:'Vishalkumar Parmar',   priority:'Medium', label:'Mobile' },
+  { key:'CJ-206', summary:'[BE] Bank Statement Vendor Error — Classification, Persistence & Journey Block', status:'READY FOR DEVELOPMENT', assignee:'Prithwi Chanda', priority:'Medium', label:'BE' },
+  { key:'CJ-205', summary:'[CJP] Redirect User Back to Bank Statement Screen on Vendor Banking Error', status:'READY FOR DEVELOPMENT', assignee:'Aniket Bharalla',  priority:'Medium', label:'CJP'    },
+  { key:'CJ-204', summary:'[Mobile] Redirect User Back to Bank Statement Screen on Vendor Banking Error', status:'READY FOR DEVELOPMENT', assignee:'Raizel Shah',    priority:'Medium', label:'Mobile' },
+  { key:'CJ-186', summary:'[Mobile] Create events for Rejection Screen for Marketplace',           status:'READY FOR CODE REVIEW',  assignee:'Gayatri Vyavahare',    priority:'Medium', label:'Mobile' },
+  { key:'CJ-174', summary:'[BE] Partner Redirection via SSO Login with Deep Link Support',         status:'READY FOR DEVELOPMENT',  assignee:'Prithwi Chanda',       priority:'Medium', label:'BE'     },
+  { key:'CJ-172', summary:'[BE] Journey Redirection with A/B Implementation',                      status:'READY FOR DEVELOPMENT',  assignee:'Prithwi Chanda',       priority:'Medium', label:'BE'     },
+  { key:'CJ-170', summary:'[FE] Add All GTM Triggers',                                             status:'DISCOVERY IN PROGRESS',  assignee:'Pramod Ponnoju',       priority:'Medium', label:'CJP'    },
+  { key:'CJ-169', summary:'[FE] NLP=7 - UI Fixes (7 UI Issues)',                                   status:'DEV IN PROGRESS',        assignee:'Prasad Alai',          priority:'Medium', label:'CJP'    },
+  { key:'CJ-168', summary:'[FE] SSO Login for Partners - Finalize Approach & Implement',           status:'READY FOR DEVELOPMENT',  assignee:'Prasad Alai',          priority:'Medium', label:'CJP'    },
+  { key:'CJ-167', summary:'[FE] Bank Statement - New Mobile Number Modal',                         status:'DEV IN PROGRESS',        assignee:'Pramod Ponnoju',       priority:'Medium', label:'CJP'    },
+  { key:'CJ-166', summary:'[FE] Journey Milestone - Frontend Updates for Journey Change',          status:'READY FOR DEVELOPMENT',  assignee:'Prasad Alai',          priority:'Medium', label:'CJP'    },
+  { key:'CJ-165', summary:'[FE] Multi-Offer API - UI Integration (Same UI)',                       status:'READY FOR DEVELOPMENT',  assignee:'Pramod Ponnoju',       priority:'Medium', label:'CJP'    },
+  { key:'CJ-147', summary:'Fix: Disable bank parsing API call from CJP flow_quick_offer_plus',     status:'QA IN PROGRESS',         assignee:'Aniket Bharalla',      priority:'High',   label:'CJP'    },
+  { key:'CJ-146', summary:'[Mobile] Current Account–Optimised AA Flow for Mobile App',             status:'READY FOR DEVELOPMENT',  assignee:'Vishalkumar Parmar',   priority:'Medium', label:'Mobile' },
+  { key:'CJ-131', summary:'[CJP] Post Sanction & MP Events for CJP',                               status:'READY TO QA',            assignee:'Prasad Alai',          priority:'Medium', label:'CJP'    },
+  { key:'CJ-129', summary:'[Mobile] Top-Up & Renewal Offer Status Card on MA Dashboard',           status:'DEV IN PROGRESS',        assignee:'Gayatri Vyavahare',    priority:'Medium', label:'Mobile' },
+  { key:'CJ-126', summary:'[Mobile] Top-Up Loan Application Journey via MA',                       status:'READY FOR DEVELOPMENT',  assignee:'Gayatri Vyavahare',    priority:'Medium', label:'Mobile' },
+  { key:'CJ-125', summary:'[Mobile] Renewal Loan Application Journey via MA',                      status:'READY FOR DEVELOPMENT',  assignee:'Gayatri Vyavahare',    priority:'Medium', label:'Mobile' },
+  { key:'CJ-103', summary:'[Backend] Upswing: Analytics & Communication Webhook Receivers',        status:'DEV IN PROGRESS',        assignee:'Aniket Bharalla',      priority:'High',   label:'BE'     },
+  { key:'CJ-82',  summary:'[Mobile] Code Clean up and Optimizations',                              status:'READY FOR DEVELOPMENT',  assignee:'Siddhant Patil',       priority:'Medium', label:'Mobile' },
+  { key:'CJ-57',  summary:'[Mobile] Design Review – Customer-Initiated Callback Scheduling via MA',status:'READY FOR CODE REVIEW',  assignee:'Gayatri Vyavahare',    priority:'Medium', label:'Mobile' },
+  { key:'CJ-56',  summary:'[CJP] Offer, Eligibility & Engagement Nudge Notifications',             status:'READY FOR DEVELOPMENT',  assignee:'Raizel Shah',          priority:'Medium', label:'CJP'    },
+  { key:'CJ-55',  summary:'[CJP] Repayment Reminder, EMI Overdue & Payment Confirmation Notifications', status:'READY FOR DEVELOPMENT', assignee:'Raizel Shah',     priority:'High',   label:'CJP'    },
+  { key:'CJ-54',  summary:'[CJP] Document Request Notifications with Deep-Link to Upload Screen',  status:'READY FOR DEVELOPMENT',  assignee:'Raizel Shah',          priority:'High',   label:'CJP'    },
+  { key:'CJ-53',  summary:'[CJP] Loan Status Notifications (Under Review, Approved, Rejected, Disbursed)', status:'READY FOR DEVELOPMENT', assignee:'Raizel Shah',  priority:'High',   label:'CJP'    },
+  { key:'CJ-50',  summary:'[Mobile] Payment Confirmation, Offer & Engagement Nudge Notifications', status:'READY FOR DEVELOPMENT',  assignee:'Raizel Shah',          priority:'Medium', label:'Mobile' },
+  { key:'CJ-49',  summary:'[Mobile] Repayment Reminder & EMI Overdue Notifications with Inline Pay Now', status:'READY FOR DEVELOPMENT', assignee:'Raizel Shah',    priority:'High',   label:'Mobile' },
+  { key:'CJ-48',  summary:'[Mobile] Document Request Notifications with Deep-Link to Upload Screen',status:'READY FOR DEVELOPMENT', assignee:'Raizel Shah',          priority:'High',   label:'Mobile' },
+  { key:'CJ-47',  summary:'[Mobile] Loan Status Notifications (Under Review, Approved, Rejected, Disbursed)', status:'DEV IN PROGRESS', assignee:'Raizel Shah',     priority:'High',   label:'Mobile' },
+  { key:'CJ-33',  summary:'[Mobile] Assign MA ID on App Login for Existing Applicants',            status:'READY FOR DEVELOPMENT',  assignee:'Vishalkumar Parmar',   priority:'Medium', label:'Mobile' },
+  { key:'CJ-29',  summary:'[Mobile] Optimize Images by Converting to WebP Format',                 status:'READY FOR DEVELOPMENT',  assignee:'Siddhant Patil',       priority:'Medium', label:'Mobile' },
+  { key:'CJ-27',  summary:'[Mobile] Unit tests for core/validation/schemas.ts',                    status:'READY FOR DEVELOPMENT',  assignee:'Siddhant Patil',       priority:'Medium', label:'Mobile' },
+  { key:'CJ-26',  summary:'[Mobile] Unit tests for core/utils — pure utility functions',           status:'READY FOR DEVELOPMENT',  assignee:'Siddhant Patil',       priority:'Medium', label:'Mobile' },
+  { key:'CJ-25',  summary:'[Mobile] Add pre-build quality gate script',                            status:'READY FOR DEVELOPMENT',  assignee:'Siddhant Patil',       priority:'Medium', label:'Mobile' },
+  { key:'CJ-24',  summary:'[Mobile] Set up Jest testing framework and configuration',              status:'READY FOR DEVELOPMENT',  assignee:'Siddhant Patil',       priority:'Medium', label:'Mobile' },
+  { key:'CJ-23',  summary:'[Mobile] Cross-Sell Funnel Event Tracking (Mixpanel + CleverTap)',      status:'DEV IN PROGRESS',        assignee:'Vishalkumar Parmar',   priority:'Medium', label:'Mobile' },
+];
+
+const assigneeColorMap = {};
+let colorIdx = 0;
+function avatarColor(name) {
+  if (!assigneeColorMap[name]) assigneeColorMap[name] = AVATAR_COLORS[colorIdx++ % AVATAR_COLORS.length];
+  return assigneeColorMap[name];
+}
+function initials(n) { return n.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase(); }
+
+let activeFilter = 'all';
+
+function setFilter(f, el) {
+  activeFilter = f;
+  document.querySelectorAll('.fbtn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  render();
+}
+
+function buildMetrics() {
+  const counts = {};
+  data.forEach(r => counts[r.status] = (counts[r.status]||0)+1);
+  const total = data.length;
+  document.getElementById('metrics').innerHTML = METRICS.map(m => {
+    const n = counts[m.key]||0;
+    const pct = Math.round(n/total*100);
+    return `<div class="mc">
+      <div class="mc-lbl">${m.label}</div>
+      <div class="mc-val">${n}</div>
+      <div class="mc-track"><div class="mc-fill" style="width:${pct}%;background:${m.color};"></div></div>
+    </div>`;
+  }).join('');
+}
+
+function render() {
+  const q = (document.getElementById('search').value||'').toLowerCase();
+  let rows = data.filter(r => {
+    const mq = !q || r.key.toLowerCase().includes(q) || r.summary.toLowerCase().includes(q) || r.assignee.toLowerCase().includes(q);
+    let mf = true;
+    if (activeFilter === 'Mobile') mf = r.label === 'Mobile';
+    else if (activeFilter === 'CJP') mf = r.label === 'CJP' || r.summary.startsWith('[FE]');
+    else if (activeFilter === 'BE') mf = r.label === 'BE' || r.summary.includes('[BE]') || r.summary.includes('[Backend]');
+    else if (activeFilter === 'High') mf = r.priority === 'High';
+    return mq && mf;
+  });
+
+  document.getElementById('h-total').textContent = rows.length;
+  document.getElementById('h-dev').textContent  = rows.filter(r=>r.status==='DEV IN PROGRESS').length;
+  document.getElementById('h-high').textContent = rows.filter(r=>r.priority==='High').length;
+  document.getElementById('count-label').textContent = `Showing ${rows.length} of ${data.length} stories`;
+
+  const tbody = document.getElementById('tbody');
+  const noRes = document.getElementById('no-results');
+
+  if (!rows.length) { tbody.innerHTML=''; noRes.style.display='block'; return; }
+  noRes.style.display = 'none';
+
+  tbody.innerHTML = rows.map(r => {
+    const s = STATUS_STYLE[r.status] || { bg:'rgba(107,114,128,0.1)', color:'#374151' };
+    const prioStyle = r.priority === 'High'
+      ? 'background:rgba(220,38,38,0.1);color:#991B1B;'
+      : 'background:rgba(37,99,235,0.08);color:#1E40AF;';
+    const ac = avatarColor(r.assignee);
+    return `<tr>
+      <td>
+        <a class="key-link" href="https://flexiloans.atlassian.net/browse/${r.key}" target="_blank" rel="noopener">
+          ${r.key}
+          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        </a>
+      </td>
+      <td><span class="summary-text" title="${r.summary}">${r.summary}</span></td>
+      <td><span class="badge" style="background:${s.bg};color:${s.color};">${r.status}</span></td>
+      <td>
+        <div class="assignee-chip">
+          <div class="avatar" style="background:${ac};">${initials(r.assignee)}</div>
+          <span class="assignee-name">${r.assignee}</span>
+        </div>
+      </td>
+      <td><span class="badge" style="${prioStyle}">${r.priority}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+document.getElementById('last-updated').textContent = 'Updated ' + new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+
+buildMetrics();
+render();
+</script>
+</body>
+</html>
